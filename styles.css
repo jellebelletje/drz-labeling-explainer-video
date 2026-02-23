@@ -1,0 +1,278 @@
+:root {
+    --bg-color: #FFFFFF;
+    --text-color: #1A1A1A;
+    --accent-blue: #01689B;
+    --accent-orange: #FF6600;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-serif: 'Playfair Display', "Times New Roman", serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-sans);
+    overflow: hidden;
+    /* Single page app, no scrolling */
+    transition: background-color 1s ease, color 1s ease;
+}
+
+#app-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5vw;
+    position: relative;
+}
+
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.8;
+    /* Base opacity over the black background if ever needed, alpha handled by renderer */
+}
+
+/* Typography styles */
+.phrase {
+    font-size: 5vw;
+    font-weight: 900;
+    line-height: 1.1;
+    position: absolute;
+    width: 90vw;
+    opacity: 0;
+    transform: translateY(50px);
+    letter-spacing: -0.02em;
+    visibility: hidden;
+    /* Will be toggled by GSAP autoAlpha */
+}
+
+/* Base formatting inside text */
+b,
+strong {
+    font-weight: 900;
+}
+
+.highlight {
+    color: var(--accent-blue);
+    display: inline-block;
+}
+
+.highlight-orange {
+    color: var(--accent-orange);
+    display: inline-block;
+}
+
+/* Krantentest Scene */
+body.krantentest-active {
+    background-color: #111;
+    color: #FFF;
+}
+
+.phrase.serif {
+    font-family: var(--font-serif);
+    font-size: 6vw;
+    font-weight: 400;
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+    left: 0;
+}
+
+/* Labels Grid */
+#labels-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1.5vw;
+    width: 90vw;
+    position: absolute;
+    top: 15%;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.label-card {
+    background: #F9F9F9;
+    border: 2px solid transparent;
+    padding: 2vw;
+    border-radius: 8px;
+    opacity: 0.2;
+    transform: scale(0.9);
+    transition: all 0.5s ease;
+    flex: 1;
+}
+
+.label-card.active {
+    opacity: 1;
+    transform: scale(1.05);
+    border-color: var(--text-color);
+    background: #FFF;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.label-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    font-weight: 900;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 1.2vw;
+    letter-spacing: -0.02em;
+}
+
+.label-badge.algemeen {
+    background: #E0E0E0;
+    color: #333;
+}
+
+.label-badge.intern {
+    background: #E3F2FD;
+    color: #01689B;
+}
+
+.label-badge.vertrouwelijk {
+    background: #FFF3E0;
+    color: #E65100;
+}
+
+.label-badge.depv {
+    background: #FFEBEE;
+    color: #C62828;
+}
+
+.label-badge.staatsgeheim {
+    background: #212121;
+    color: #FFF;
+}
+
+.label-desc {
+    font-size: 1vw;
+    font-weight: 400;
+    color: #555;
+    line-height: 1.4;
+}
+
+.phrase.type-label-trigger,
+.phrase.type-label-content {
+    top: 55%;
+    font-size: 4vw;
+}
+
+/* Vangnet Scene */
+.vangnet-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.scan-line {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--accent-blue);
+    box-shadow: 0 0 15px var(--accent-blue);
+    opacity: 0;
+    z-index: 10;
+}
+
+.redacted {
+    display: inline-block;
+    position: relative;
+    color: var(--text-color);
+}
+
+.redacted::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0%;
+    height: 40%;
+    background-color: var(--text-color);
+    transform: translateY(-50%);
+    transition: width 0.3s ease;
+}
+
+.redacted.active::after {
+    width: 100%;
+}
+
+/* The Tip Scene */
+.phrase.tip {
+    text-align: center;
+    font-size: 6vw;
+    color: var(--accent-blue);
+    width: 100%;
+    left: 0;
+}
+
+/* Controls */
+#controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 25px;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    border: 1px solid #EEE;
+}
+
+#play-btn {
+    appearance: none;
+    border: none;
+    background: var(--text-color);
+    color: var(--bg-color);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+#play-btn:hover {
+    transform: scale(1.05);
+    background: var(--accent-blue);
+}
+
+#time-display {
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: #333;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.bold-blue {
+    color: var(--accent-blue);
+}
+
+.bold-orange {
+    color: var(--accent-orange);
+}
