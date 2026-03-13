@@ -10,7 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;1,700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=3">
 </head>
 
 <body>
@@ -23,31 +23,29 @@
         <div id="labels-container" class="hidden">
             <div class="label-card" id="label-algemeen">
                 <div class="label-badge algemeen">Algemeen</div>
-                <div class="label-desc">Informatie die iedereen mag zien. Geen beveiliging.</div>
+                <div class="label-desc">Iedereen mag zien. Delen met buitenwereld.</div>
             </div>
             <div class="label-card" id="label-intern">
                 <div class="label-badge intern">Intern</div>
-                <div class="label-desc">Onderling delen. Versleuteld.</div>
+                <div class="label-desc">Standaard voor documenten. Alleen binnen DRZ.</div>
             </div>
             <div class="label-card" id="label-vertrouwelijk">
                 <div class="label-badge vertrouwelijk">Vertrouwelijk</div>
-                <div class="label-desc">Gevoelige zaken. Kleine groep. Geen AI.</div>
+                <div class="label-desc">Gevoelige zaken. Specifieke groep. Ook buiten organisatie.</div>
             </div>
             <div class="label-card" id="label-depv">
                 <div class="label-badge depv">Dep.V.</div>
-                <div class="label-desc">Grote schade. Strenge regels (inloggen).</div>
-            </div>
-            <div class="label-card" id="label-staatsgeheim">
-                <div class="label-badge staatsgeheim">Staatsgeheim</div>
-                <div class="label-desc">Zeer gevaarlijk. Veiligheid land.</div>
+                <div class="label-desc">Schade bij ministerie. Extra strenge regels.</div>
             </div>
         </div>
     </div>
 
     <div id="controls">
+        <button id="skip-back" class="skip-btn" title="Back 10s">&laquo; 10s</button>
         <button id="play-btn">Play</button>
-        <div id="time-display">0:00 / 4:39</div>
-        <audio id="audio-player" src="audio/labeling-drz-explainer-intro.m4a"></audio>
+        <button id="skip-fwd" class="skip-btn" title="Forward 10s">10s &raquo;</button>
+        <div id="time-display">0:00 / 4:22</div>
+        <audio id="audio-player" src="audio/labeling-drz-updated- incl-music.m4a"></audio>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>

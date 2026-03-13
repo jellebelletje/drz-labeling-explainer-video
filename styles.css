@@ -28,7 +28,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 5vw;
+    padding: 5vw 5vw calc(5vw + 100px) 5vw;
     position: relative;
 }
 
@@ -169,7 +169,7 @@ body.krantentest-active {
 
 .phrase.type-label-trigger,
 .phrase.type-label-content {
-    top: 55%;
+    top: 50%;
     font-size: 4vw;
 }
 
@@ -256,6 +256,25 @@ body.krantentest-active {
 #play-btn:hover {
     transform: scale(1.05);
     background: var(--accent-blue);
+}
+
+.skip-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: #555;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.skip-btn:hover {
+    background: #F0F0F0;
+    color: var(--text-color);
 }
 
 #time-display {

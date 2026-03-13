@@ -1,5 +1,7 @@
 const audioBase = document.getElementById('audio-player');
 const playBtn = document.getElementById('play-btn');
+const skipBack = document.getElementById('skip-back');
+const skipFwd = document.getElementById('skip-fwd');
 const timeDisplay = document.getElementById('time-display');
 const textContainer = document.getElementById('text-container');
 const labelsContainer = document.getElementById('labels-container');
@@ -7,78 +9,81 @@ const labelsContainer = document.getElementById('labels-container');
 // Complete Timing Array mapping perfectly mapping the voiceover
 // Start and End times in seconds. Tweak these slightly if needed manually.
 const timingData = [
-    { start: 0, end: 10.5, text: "Onder het motto <span class='bold-blue'>“Makkelijker kunnen we het niet maken, wel leuker”</span> gaan we bij DRZ van start met onze nieuwe informatie-classificatie.", type: "standard" },
-    { start: 11, end: 13.5, text: "Oftewel:<br><span class='highlight' style='font-size: 8vw;'>Het Nieuwe Labelen.</span>", type: "intro" },
-    { start: 14, end: 18.5, text: "Maar wat is dat eigenlijk, <span class='bold-blue'>informatie-classificatie</span>?", type: "standard" },
-    { start: 19, end: 24.5, text: "Je kunt het zien als het plakken van een <span class='bold-orange'>digitale sticker</span> op je document of e-mail.", type: "standard" },
-    { start: 25, end: 35.5, text: "Met dat label vertel je aan collega's, maar ook aan de computersystemen, hoe voorzichtig we met die informatie moeten omgaan en wie het mag zien.", type: "standard" },
-    { start: 36, end: 40.5, text: "Zoals bijna iedereen wel weet, waren er in de oude situatie al wel labels.", type: "standard" },
-    { start: 41, end: 43.5, text: "Maar werden deze niet echt gebruikt.", type: "standard" },
-    { start: 44, end: 49.5, text: "Bijna alles bleef standaard op 'Algemeen' staan, wat niet goed was voor onze <span class='bold-orange'>veiligheid</span>.", type: "standard" },
-    { start: 50, end: 51.5, text: "Dat gaat nu veranderen.", type: "standard" },
-    { start: 52, end: 58.5, text: "We gaan nu <span class='bold-blue'>bewust de juiste labels kiezen</span> om onze organisatie beter te beveiligen.", type: "standard" },
-    { start: 59, end: 64.5, text: "Zo zorgen we er bijvoorbeeld voor dat gevoelige informatie die niet voor iedereen bestemd is,", type: "standard" },
-    { start: 65, end: 68.5, text: "ook voor AI-hulpjes zoals Copilot wordt afgeschermd.", type: "standard" },
-    { start: 69, end: 75.5, text: "Hierdoor krijgt niemand toegang tot data waar hij geen toegang toe mag hebben.", type: "standard" },
+    // Intro (1-31s) - Stickers sequence
+    { start: 1, end: 11, text: "Onder het motto <span class='bold-blue'>\u201CMakkelijker kunnen we het niet maken, wel leuker\u201D</span>, gaan we bij DRZ vanaf nu aan de slag met informatielabels.", type: "standard" },
+    { start: 11, end: 14, text: "Maar wat doen die eigenlijk?", type: "standard" },
+    { start: 14, end: 18, text: "Labels zijn er voor het <span class='bold-blue'>classificeren</span> van onze informatie.", type: "standard" },
+    { start: 18, end: 24, text: "Je kunt het zien als het plakken van een <span class='bold-orange'>digitale sticker</span> op je document of e-mail.", type: "standard" },
+    { start: 24, end: 31, text: "Met dat label vertel je aan collega\u2019s, maar ook aan het computersysteem, hoe voorzichtig we met die informatie moeten omgaan.", type: "standard" },
 
-    { start: 76, end: 78.5, text: "Laten we eerlijk zijn over wat dit voor jou betekent:", type: "standard" },
-    { start: 79, end: 82.5, text: "de beveiliging staat voortaan <span class='bold-orange'>strakker afgesteld</span>.", type: "standard" },
-    { start: 83, end: 88.5, text: "Dat wil zeggen dat je in sommige gevallen misschien niet meer alles met een document kunt doen wat je", type: "standard" },
-    { start: 89, end: 92.5, text: "eerst wel kon, zoals het zomaar doorsturen of uitprinten.", type: "standard" },
-    { start: 93, end: 97.5, text: "Dat vraagt om een aanpassing in hoe we met onze informatie omgaan.", type: "standard" },
-    { start: 98, end: 103.5, text: "Het belangrijkste is om daar niet gefrustreerd over te raken, maar te begrijpen waarom deze", type: "standard" },
-    { start: 104, end: 105.5, text: "regels er zijn.", type: "standard" },
+    // Why labels help you (31-59s) - Shield sequence
+    { start: 31, end: 35, text: "Nu denk je misschien: <span class='bold-orange'>\u201CN\u00F3g een taak erbij?\u201D</span>", type: "standard" },
+    { start: 35, end: 37, text: "Maar deze labels zijn er juist <span class='bold-blue'>voor jou</span>.", type: "standard" },
+    { start: 37, end: 44, text: "Het geeft je de zekerheid dat je altijd volgens de regels werkt zonder dat je er lang over na hoeft te denken.", type: "standard" },
+    { start: 44, end: 51, text: "Het voorkomt die vervelende <span class='bold-orange'>\u201Coeps-momenten\u201D</span> waarbij gevoelige informatie per ongeluk op de verkeerde plek belandt.", type: "standard" },
+    { start: 51, end: 57, text: "Met <span class='bold-blue'>\u00E9\u00E9n klik</span> bescherm je jouw werk, je collega\u2019s en de reputatie van DRZ.", type: "standard" },
+    { start: 57, end: 59, text: "Dat werkt wel zo rustig.", type: "standard" },
 
-    // Krantentest sequence
-    { start: 106, end: 109.5, text: "Om je daarbij te helpen, gebruiken we de <span class='highlight' style='font-size: 7vw;'>'krantentest'</span>.", type: "standard" },
-    { start: 110, end: 111.5, text: "Stel jezelf bij elk document de volgende vraag:", type: "krantentest-intro" },
-    { start: 112, end: 118.5, text: "“Zou er schade ontstaan voor de organisatie, voor anderen of voor mijzelf,", type: "krantentest-quote" },
-    { start: 119, end: 125.5, text: "als deze informatie morgen op de voorpagina van de krant staat?”", type: "krantentest-quote" },
-    { start: 126, end: 130.5, text: "Hier zijn de <span class='bold-blue'>vijf labels</span> en wat ze betekenen:", type: "standard-clear-bg" },
+    // Smart setup / docs vs email (59-93s)
+    { start: 59, end: 67, text: "Om te zorgen dat die beveiliging je niet in de weg zit bij je dagelijkse werk, hebben we het systeem <span class='bold-blue'>slim ingericht</span>.", type: "standard" },
+    { start: 67, end: 71, text: "Daarbij is er een belangrijk verschil tussen je <span class='bold-blue'>e-mail</span> en je <span class='bold-orange'>documenten</span>:", type: "standard" },
+    { start: 71, end: 76, text: "bij documenten is het standaard label voortaan <span class='highlight' style='font-size: 7vw;'>\u2018Intern\u2019</span>.", type: "standard" },
+    { start: 76, end: 81, text: "Dat is veilig, want zo blijven ze binnen de muren van onze organisatie.", type: "standard" },
+    { start: 81, end: 83, text: "Voor e-mail is dat anders.", type: "standard" },
+    { start: 83, end: 89, text: "Omdat we vaak met de buitenwereld moeten mailen, staat het standaard label daar op <span class='highlight' style='font-size: 7vw;'>\u2018Algemeen\u2019</span>.", type: "standard" },
+    { start: 89, end: 93, text: "Zo kun je gewoon je werk doen zonder dat techniek je in de weg zit.", type: "standard" },
 
-    // Label Sequence
-    { start: 131, end: 132.5, text: "Algemeen:", type: "label-trigger", labelTarget: "algemeen" },
-    { start: 133, end: 138.5, text: "Dit is informatie die iedereen mag zien, zoals een nieuwsbericht of een tekst voor een website.", type: "label-content", labelTarget: "algemeen" },
-    { start: 139, end: 140.5, text: "Als dit in de krant komt, is dat prima.", type: "label-content", labelTarget: "algemeen" },
-    { start: 141, end: 147.5, text: "Bij dit label wordt de beveiliging er juist afgehaald zodat iedereen het makkelijk kan lezen.", type: "label-content", labelTarget: "algemeen" },
+    // Krantentest (93-111s) - Editorial grid sequence
+    { start: 93, end: 99, text: "Om te helpen bij het kiezen van het juiste label, gebruiken we de <span class='highlight' style='font-size: 7vw;'>krantentest</span>.", type: "standard" },
+    { start: 99, end: 101, text: "Stel jezelf bij elk document de vraag:", type: "krantentest-intro" },
+    { start: 101, end: 111, text: "\u201CZou er schade ontstaan voor de organisatie of voor anderen als deze informatie morgen op de voorpagina van de krant staat?\u201D", type: "krantentest-quote" },
 
-    { start: 148, end: 148.9, text: "2. Intern:", type: "label-trigger", labelTarget: "none" },
-    { start: 149, end: 155.5, text: "Dit is ons nieuwe standaardlabel voor zaken als teamafspraken of handleidingen.", type: "label-trigger", labelTarget: "intern" },
-    { start: 156, end: 163.5, text: "Deze informatie is alleen voor ons binnen de organisatie bedoeld en wordt beveiligd met versleuteling.", type: "label-content", labelTarget: "intern" },
+    // Concrete examples (111-142s)
+    { start: 111, end: 114, text: "Laten we dat concreet maken met een paar voorbeelden:", type: "standard-clear-bg" },
+    { start: 114, end: 117, text: "een nieuwsbericht voor het intranet? Dat mag in de krant; dat is dus <span class='bold-blue'>Algemeen</span>.", type: "standard" },
+    { start: 117, end: 122, text: "Een interne notitie over een teamoverleg?", type: "standard" },
+    { start: 122, end: 132, text: "Niet voor de krant, maar ook niet geheim; dat labelen we als <span class='bold-blue'>Intern</span>.", type: "standard" },
+    { start: 132, end: 137, text: "Werk je aan een beoordelingsverslag of een dossier met persoonsgegevens?", type: "standard" },
+    { start: 137, end: 140, text: "Als dat in de krant komt, is de schade groot.", type: "standard" },
+    { start: 140, end: 142, text: "Dat is <span class='bold-orange'>Vertrouwelijk</span>.", type: "standard" },
 
-    { start: 164, end: 164.9, text: "3. Vertrouwelijk:", type: "label-trigger", labelTarget: "none" },
-    { start: 165, end: 171.5, text: "Dit gaat om gevoelige zaken die je alleen met een kleine groep mensen deelt.", type: "label-trigger", labelTarget: "vertrouwelijk" },
-    { start: 172, end: 178.5, text: "AI-tools zoals Copilot mogen deze bestanden niet gebruiken om antwoorden te geven.", type: "label-content", labelTarget: "vertrouwelijk" },
+    // Label overview (142-200s) - Label geometries + cards
+    { start: 142, end: 146, text: "Hier is een overzicht van wat de verschillende labels betekenen:", type: "standard-clear-bg" },
 
-    { start: 179, end: 183.5, text: "4. Departementaal Vertrouwelijk (Dep.V.):", type: "label-trigger", labelTarget: "depv" },
-    { start: 184, end: 189.5, text: "Dit is informatie die schade kan aanrichten bij een ministerie als het op straat komt te liggen.", type: "label-content", labelTarget: "depv" },
-    { start: 190, end: 194.5, text: "Hier gelden extra strenge regels voor, zoals vaker moeten inloggen.", type: "label-content", labelTarget: "depv" },
+    // Algemeen
+    { start: 146, end: 147, text: "1. Algemeen:", type: "label-trigger", labelTarget: "algemeen" },
+    { start: 147, end: 155, text: "Informatie die iedereen mag zien. Makkelijk te delen met de buitenwereld.", type: "label-content", labelTarget: "algemeen" },
 
-    { start: 195, end: 196.5, text: "5. Staatsgeheim:", type: "label-trigger", labelTarget: "staatsgeheim" },
-    { start: 197, end: 203.5, text: "Dit is onze meest gevoelige informatie, waarbij een lek de veiligheid van het land in gevaar brengt.", type: "label-content", labelTarget: "staatsgeheim" },
-    { start: 204, end: 206.5, text: "Bijna niemand heeft hier toegang toe.", type: "label-content", labelTarget: "staatsgeheim" },
+    // Intern
+    { start: 155, end: 156, text: "2. Intern:", type: "label-trigger", labelTarget: "intern" },
+    { start: 156, end: 167, text: "De standaard voor onze documenten. Dit is alleen voor gebruik binnen de organisatie. Je kunt dit dus niet delen met iemand buiten DRZ.", type: "label-content", labelTarget: "intern" },
 
-    { start: 207, end: 216.5, text: "Het is belangrijk dat je je bij elk stukje informatie afvraagt wat voor type informatie het is en dat je het op de juiste manier labelt.", type: "standard-clear-bg" },
+    // Vertrouwelijk
+    { start: 167, end: 168, text: "3. Vertrouwelijk:", type: "label-trigger", labelTarget: "vertrouwelijk" },
+    { start: 168, end: 184, text: "Voor gevoelige zaken die je deelt met een specifieke groep personen. Dit kunnen collega\u2019s zijn, maar dit label gebruik je dus ook als je veilig wilt delen met geselecteerde mensen buiten de organisatie.", type: "label-content", labelTarget: "vertrouwelijk" },
 
-    // Vangnet sequence
-    { start: 217, end: 220.5, text: "Om ons daarbij te helpen, hebben we een <span class='bold-blue'>digitaal vangnet</span> ingebouwd.", type: "standard" },
-    { start: 221, end: 229.5, text: "<div class='vangnet-wrap'>Het systeem herkent het vaak zelf als er gegevens in een bestand staan zoals een <span class='redacted' id='redact-1'>BSN</span>, <span class='redacted' id='redact-2'>paspoortnummer</span> of een <span class='redacted' id='redact-3'>bankrekeningnummer</span>.<div class='scan-line' id='vangnet-scanner'></div></div>", type: "vangnet" },
+    // Dep.V
+    { start: 184, end: 185, text: "4. Dep. V:", type: "label-trigger", labelTarget: "depv" },
+    { start: 185, end: 200, text: "Oftewel Departementaal Vertrouwelijk: Voor informatie die schade kan aanrichten bij het gehele ministerie. Hier gelden extra strenge beveiligingsregels voor.", type: "label-content", labelTarget: "depv" },
 
-    { start: 230, end: 234.5, text: "Zie het als een extra hulpje dat voorkomt dat we per ongeluk fouten maken.", type: "standard" },
-    { start: 235, end: 236.5, text: "Maar let op:", type: "standard" },
-    { start: 237, end: 239.5, text: "dit systeem is <span class='bold-orange'>niet 100% waterdicht</span>.", type: "standard" },
-    { start: 240, end: 244.5, text: "Je blijft altijd zelf verantwoordelijk voor wat je deelt met andere mensen of met machines.", type: "standard" },
-    { start: 245, end: 248.5, text: "Blijf dus altijd zelf goed nadenken bij elk label dat je kiest.", type: "standard" },
+    // AI & Security (200-221s)
+    { start: 200, end: 204, text: "Door te labelen, houd je ook de <span class='bold-blue'>regie over AI</span>.", type: "standard-clear-bg" },
+    { start: 204, end: 211, text: "Gevoelige informatie wordt zo automatisch afgeschermd voor AI-hulpjes zoals <span class='bold-orange'>Copilot</span>.", type: "standard" },
+    { start: 211, end: 218, text: "De beveiliging staat dus soms wat strakker; zo kun je bepaalde documenten niet meer zomaar doorsturen of printen.", type: "standard" },
+    { start: 218, end: 221, text: "Dat hoort bij veilig werken.", type: "standard" },
 
-    { start: 249, end: 250.5, text: "Zoals gezegd: we kunnen het wel leuker maken.", type: "standard" },
-    { start: 251, end: 253.5, text: "Daarom hebben we een paar games ontwikkeld.", type: "standard" },
-    { start: 254, end: 261.5, text: "De eerste leert je hoe je labels moet toepassen, en de tweede leert je wat de consequenties zijn van het toepassen van die labels.", type: "standard" },
+    // Vangnet (221-244s) - Net sequence
+    { start: 221, end: 229, text: "<div class='vangnet-wrap'>We hebben een digitaal vangnet ingebouwd dat gegevens zoals een <span class='redacted' id='redact-1'>BSN</span> of <span class='redacted' id='redact-2'>bankrekeningnummer</span> herkent.<div class='scan-line' id='vangnet-scanner'></div></div>", type: "vangnet" },
+    { start: 229, end: 232, text: "Dit is een automatische extra controle,", type: "standard" },
+    { start: 232, end: 235, text: "maar <span class='bold-orange'>geen garantie</span>.", type: "standard" },
+    { start: 235, end: 240, text: "Je blijft altijd zelf verantwoordelijk voor wat je deelt met mensen of machines.", type: "standard" },
+    { start: 240, end: 244, text: "Blijf dus zelf nadenken bij elk label dat je kiest.", type: "standard" },
 
-    { start: 262, end: 264.5, text: "Veel plezier met Het Nieuwe Labelen.", type: "standard" },
-
-    { start: 265, end: 266.5, text: "Nog een kleine tip.", type: "standard" },
-    { start: 267, end: 272.5, text: "Als je twijfelt tussen intern en vertrouwelijk,", type: "standard" },
-    { start: 273, end: 278, text: "zet hem dan op <span class='bold-orange'>vertrouwelijk</span>. Dan zit je altijd goed.", type: "tip" }
+    // Games & Outro (244-262s) - Circles sequence
+    { start: 244, end: 247, text: "Wil je weten of je het labelen al in de vingers hebt?", type: "standard" },
+    { start: 247, end: 255, text: "We hebben twee games ontwikkeld waarin je direct kunt testen hoe je de labels toepast en wat de gevolgen zijn in de praktijk.", type: "standard" },
+    { start: 255, end: 258, text: "We zeiden toch dat we het <span class='bold-blue'>leuk</span> zouden maken?", type: "standard" },
+    { start: 258, end: 262, text: "Veel succes met het veilig houden van onze informatie!", type: "standard" }
 ];
 
 let mainTimeline;
@@ -102,47 +107,46 @@ function init() {
     mainTimeline = gsap.timeline({ paused: true });
 
     // --- CANVAS ORCHESTRATION ---
-    // Sequence 1: 0 - 45s (Floating Stickers)
+    // Sequence 1: 0 - 35s (Floating Stickers)
     mainTimeline.to(bgState, { seq1Alpha: 1, duration: 5 }, 0);
-    mainTimeline.to(bgState, { seq1Alpha: 0, duration: 5 }, 40);
+    mainTimeline.to(bgState, { seq1Alpha: 0, duration: 5 }, 28);
 
-    // Sequence 2: 45 - 90s (Shield Grid)
-    mainTimeline.to(bgState, { seq2Alpha: 1, duration: 5 }, 45);
-    // "Copilot" mentioned ~65s
-    mainTimeline.to(bgState, { seq2ShieldThick: 1, duration: 2, ease: "power2.out" }, 65);
-    mainTimeline.to(bgState, { seq2ShieldThick: 0, duration: 2 }, 69);
-    mainTimeline.to(bgState, { seq2Alpha: 0, duration: 5 }, 85);
+    // Sequence 2: 31 - 60s (Shield Grid)
+    mainTimeline.to(bgState, { seq2Alpha: 1, duration: 5 }, 31);
+    // "één klik bescherm je" mentioned ~51s
+    mainTimeline.to(bgState, { seq2ShieldThick: 1, duration: 2, ease: "power2.out" }, 51);
+    mainTimeline.to(bgState, { seq2ShieldThick: 0, duration: 2 }, 55);
+    mainTimeline.to(bgState, { seq2Alpha: 0, duration: 5 }, 56);
 
-    // Sequence 3: 90 - 120s (Editorial Grid)
-    mainTimeline.to(bgState, { seq3Alpha: 1, duration: 5 }, 90);
-    mainTimeline.to(bgState, { seq3ScrollY: 100, duration: 30, ease: "none" }, 90);
-    mainTimeline.to(bgState, { seq3Alpha: 0, duration: 5 }, 115);
+    // Sequence 3: 88 - 146s (Editorial Grid - krantentest & examples)
+    mainTimeline.to(bgState, { seq3Alpha: 1, duration: 5 }, 88);
+    mainTimeline.to(bgState, { seq3ScrollY: 100, duration: 55, ease: "none" }, 88);
+    mainTimeline.to(bgState, { seq3Alpha: 0, duration: 5 }, 140);
 
-    // Sequence 4: 120 - 210s (Label Geometries)
-    // Algemeen (131 - 148)
-    mainTimeline.to(bgState, { seq4AlgemeenAlpha: 1, duration: 2 }, 131);
-    mainTimeline.to(bgState, { seq4Pulsar: 1, duration: 2, repeat: 8, yoyo: true, ease: "sine.inOut" }, 131);
-    mainTimeline.to(bgState, { seq4AlgemeenAlpha: 0, duration: 2 }, 146);
+    // Sequence 4: 146 - 200s (Label Geometries)
+    // Algemeen (146 - 155)
+    mainTimeline.to(bgState, { seq4AlgemeenAlpha: 1, duration: 2 }, 146);
+    mainTimeline.to(bgState, { seq4Pulsar: 1, duration: 2, repeat: 4, yoyo: true, ease: "sine.inOut" }, 146);
+    mainTimeline.to(bgState, { seq4AlgemeenAlpha: 0, duration: 2 }, 153);
 
-    // Intern / Vertrouwelijk (149 - 179)
-    mainTimeline.to(bgState, { seq4InternAlpha: 1, duration: 2 }, 149);
-    mainTimeline.to(bgState, { seq4Pulsar: Math.PI * 2, duration: 30, ease: "none" }, 149);
-    mainTimeline.to(bgState, { seq4InternAlpha: 0, duration: 2 }, 177);
+    // Intern / Vertrouwelijk (155 - 184)
+    mainTimeline.to(bgState, { seq4InternAlpha: 1, duration: 2 }, 155);
+    mainTimeline.to(bgState, { seq4Pulsar: Math.PI * 2, duration: 29, ease: "none" }, 155);
+    mainTimeline.to(bgState, { seq4InternAlpha: 0, duration: 2 }, 182);
 
-    // Staatsgeheim (195 - 208)
-    mainTimeline.to(bgState, { seq4StaatsAlpha: 1, duration: 3, ease: "steps(3)" }, 195);
-    mainTimeline.to(bgState, { seq4StaatsAlpha: 0, duration: 2 }, 208);
+    // Dep.V (184 - 200)
+    mainTimeline.to(bgState, { seq4StaatsAlpha: 1, duration: 3, ease: "steps(3)" }, 184);
+    mainTimeline.to(bgState, { seq4StaatsAlpha: 0, duration: 2 }, 198);
 
-    // Sequence 5: 210 - 250s (The Net)
-    mainTimeline.to(bgState, { seq5Alpha: 1, duration: 5 }, 210);
-    mainTimeline.to(bgState, { seq5WaveOff: Math.PI * 10, duration: 40, ease: "none" }, 210);
-    mainTimeline.to(bgState, { seq5Alpha: 0, duration: 5 }, 245);
+    // Sequence 5: 218 - 248s (The Net / Vangnet)
+    mainTimeline.to(bgState, { seq5Alpha: 1, duration: 5 }, 218);
+    mainTimeline.to(bgState, { seq5WaveOff: Math.PI * 10, duration: 30, ease: "none" }, 218);
+    mainTimeline.to(bgState, { seq5Alpha: 0, duration: 5 }, 243);
 
-    // Sequence 6: 250s - End (Bouncing Circles)
-    mainTimeline.to(bgState, { seq6Alpha: 1, duration: 5 }, 250);
-    // Add some elastic scale bounces for the circles using dummy property
-    mainTimeline.to(bgState, { seq6Time: 1, duration: 2, ease: "elastic.out(1, 0.3)", repeat: 10 }, 250);
-    mainTimeline.to(bgState, { seq6Alpha: 0, duration: 5 }, 274);
+    // Sequence 6: 248s - End (Bouncing Circles)
+    mainTimeline.to(bgState, { seq6Alpha: 1, duration: 3 }, 248);
+    mainTimeline.to(bgState, { seq6Time: 1, duration: 2, ease: "elastic.out(1, 0.3)", repeat: 7 }, 248);
+    mainTimeline.to(bgState, { seq6Alpha: 0, duration: 3 }, 259);
 
 
     // Populate timeline commands
@@ -192,10 +196,9 @@ function init() {
             // Scanline
             mainTimeline.to('#vangnet-scanner', { opacity: 1, duration: 0.2 }, inTime + 0.5);
             mainTimeline.to('#vangnet-scanner', { top: '100%', duration: 3, ease: "linear" }, inTime + 0.5);
-            // Redactions mapped to scan progress approx.
+            // Redactions mapped to scan progress
             mainTimeline.to('#redact-1', { className: 'redacted active', duration: 0.1 }, inTime + 1.2);
-            mainTimeline.to('#redact-2', { className: 'redacted active', duration: 0.1 }, inTime + 1.8);
-            mainTimeline.to('#redact-3', { className: 'redacted active', duration: 0.1 }, inTime + 2.4);
+            mainTimeline.to('#redact-2', { className: 'redacted active', duration: 0.1 }, inTime + 2.0);
             mainTimeline.to('#vangnet-scanner', { opacity: 0, duration: 0.2 }, outTime - 0.5);
 
             mainTimeline.to(item.el, { autoAlpha: 0, scale: 0.9, duration: 0.5 }, outTime);
@@ -210,8 +213,8 @@ function init() {
         }
     });
 
-    // Make timeline match exact audio duration (approx 4:39 = 279s)
-    mainTimeline.duration(279);
+    // Make timeline match exact audio duration (approx 4:22 = 262s)
+    mainTimeline.duration(262);
 }
 
 // Controls logic to Sync Audio and GSAP Time perfectly
@@ -233,6 +236,17 @@ playBtn.addEventListener('click', () => {
     isPlaying = !isPlaying;
 });
 
+// Skip controls
+skipBack.addEventListener('click', () => {
+    audioBase.currentTime = Math.max(0, audioBase.currentTime - 10);
+    mainTimeline.time(audioBase.currentTime);
+});
+
+skipFwd.addEventListener('click', () => {
+    audioBase.currentTime = Math.min(audioBase.duration, audioBase.currentTime + 10);
+    mainTimeline.time(audioBase.currentTime);
+});
+
 // If the audio ends, reset
 audioBase.addEventListener('ended', () => {
     isPlaying = false;
@@ -247,7 +261,7 @@ function updateTimeline() {
     // Update numerical time display
     const mins = Math.floor(audioBase.currentTime / 60);
     const secs = Math.floor(audioBase.currentTime % 60);
-    timeDisplay.innerText = `${mins}:${secs.toString().padStart(2, '0')} / 4:39`;
+    timeDisplay.innerText = `${mins}:${secs.toString().padStart(2, '0')} / 4:22`;
 }
 
 // Initialize on DOM mapped
@@ -312,7 +326,7 @@ function renderCanvas() {
     ctx.clearRect(0, 0, cw, ch);
     ctx.lineJoin = 'round';
 
-    // SEQUENCE 1: Floating Stickers (0-45s)
+    // SEQUENCE 1: Floating Stickers (0-35s)
     if (bgState.seq1Alpha > 0) {
         ctx.save();
         ctx.globalAlpha = bgState.seq1Alpha * 0.2;
@@ -331,7 +345,7 @@ function renderCanvas() {
         ctx.restore();
     }
 
-    // SEQUENCE 2: Shield / Dot Grid (45-90s)
+    // SEQUENCE 2: Shield / Dot Grid (31-60s)
     if (bgState.seq2Alpha > 0) {
         ctx.save();
         ctx.globalAlpha = bgState.seq2Alpha * 0.2;
@@ -355,7 +369,7 @@ function renderCanvas() {
         ctx.restore();
     }
 
-    // SEQUENCE 3: Editorial Grid (90-120s)
+    // SEQUENCE 3: Editorial Grid (88-146s)
     if (bgState.seq3Alpha > 0) {
         ctx.save();
         ctx.globalAlpha = bgState.seq3Alpha * 0.2;
@@ -379,7 +393,7 @@ function renderCanvas() {
         ctx.restore();
     }
 
-    // SEQUENCE 4: Label Geometry (120-210s)
+    // SEQUENCE 4: Label Geometry (146-200s)
     if (bgState.seq4AlgemeenAlpha > 0) {
         ctx.save();
         ctx.globalAlpha = bgState.seq4AlgemeenAlpha * 0.12;
@@ -415,7 +429,7 @@ function renderCanvas() {
         ctx.restore();
     }
 
-    // SEQUENCE 5: The Net (210-250s)
+    // SEQUENCE 5: The Net (218-248s)
     if (bgState.seq5Alpha > 0) {
         ctx.save();
         ctx.globalAlpha = bgState.seq5Alpha * 0.2;
@@ -433,7 +447,7 @@ function renderCanvas() {
         ctx.restore();
     }
 
-    // SEQUENCE 6: Bouncing Circles (250s-end)
+    // SEQUENCE 6: Bouncing Circles (248s-end)
     if (bgState.seq6Alpha > 0) {
         ctx.save();
         ctx.globalAlpha = bgState.seq6Alpha * 0.15;
